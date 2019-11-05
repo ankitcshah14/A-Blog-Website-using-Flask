@@ -1,0 +1,31 @@
+<!-- The Templating engine used by flask is jinja 2 -->
+{% extends "layout.html" %}
+{% block content %}
+	<!-- We write posts.items because it is a pagination object now-->
+	{% for post in posts.items %}
+		<article class="media content-section">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <a class="mr-2" href="{{ url_for('userPosts', username=post.author.username) }}">{{ post.author.username }}</a>
+		      <small class="text-muted">{{ post.datePosted.strftime('%d-%m-%Y') }}</small>
+		    </div>
+		    <h2><a class="article-title" href="{{ url_for('post', postId = post.id) }}">{{post.title }}</a></h2>
+		    <p class="article-content">{{ post.content }}</p>
+		  </div>
+		</article>
+	{% endfor %}
+
+	<!-- Display of page numbers at the bottom #Pagination-->
+	{% for pageNum in posts.iter_pages(left_edge = 1, right_edge = 1, left_current = 1, right_current = 2) %}
+		{% if pageNum %}
+			{% if posts.page == pageNum %}
+				<a class = "btn btn-info mb-4" href = "{{ url_for('home', page = pageNum)}}"> {{ pageNum }}</a>
+			{% else %}
+				<a class = "btn btn-outline-info mb-4" href = "{{ url_for('home', page = pageNum)}}"> {{ pageNum }}</a>
+			{% endif %}
+		{% else %}
+		 ...
+		{% endif %}
+	{% endfor %}				
+			
+{% endblock content %}
